@@ -1,0 +1,29 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="card" style="width: 40rem; margin: auto; margin-top: 50px; ">
+    <div class="card-header">
+        Delete Listing
+    </div>
+    <div class="card-body">
+        <form method="post" class="form-group">
+            {% csrf_token %}
+            <h5 class="card-title text-center">Are you sure you want to delete this listing?</h5>
+            <img src="../{{object.image.url}}" style="max-width: 60%; max-height: 100%; display: block;  margin-left: auto; margin-right: auto; margin-bottom: 10px;">
+            <ul class="list-group list-group-flush">
+                
+                <li class="list-group-item text-muted">{{object.title}}</li>
+                <li class="list-group-item text-muted">{{object.description}}</li>
+                <li class="list-group-item text-muted">{{object.category}}</li>
+                <li class="list-group-item text-muted">{{object.size}}</li>
+                <li class="list-group-item text-muted">{{object.condition}}</li>
+            </ul>
+            <div class="card-body">
+                <input type="submit" class="btn btn-danger" value="Delete" style="width:30%;">
+                <a href="/" type="button" class="btn btn-warning text-white" style="width:30%;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="card" style="margin:auto; width: 50%; margin-top: 15px; padding:20px;">
+  <div class="container">
+      <div class="card-body text-center">
+          <img src="../{{ listing.image.url }}" style="max-width: 40%; max-height: 25%; justify-content: center;">
+      </div>
+  </div>
+  <div class="card-deck">
+      <div class="card border-0">
+        <div class="card-body">
+          <h5 class="card-title" style="font-weight:800">{{ listing.title }}</h5>
+          <small class="text-muted">Description</small>
+          <p class="card-text">{{ listing.description }}</p>
+          <small class="text-muted">Category</small>
+          <p class="card-text">{{ listing.category }}</p>
+          <small class="text-muted">Size</small>
+          <p class="card-text">{{ listing.size }}</p>
+          <small class="text-muted">Condition</small>
+          <p class="card-text">{{ listing.condition }}</p>
+          {% if listing.is_available == False %}
+            <button type="button" class="btn btn-danger" style="width:15rem;">Not Available</button>
+          {% else %}
+            <button type="button" class="btn btn-success" style="width:15rem;">Available</button>
+          {% endif %}
+
+        </div>
+      </div>
+      <div class="card border-0">
+        <div class="card-body text-center">
+          <figure class="figure">
+            <img src="../static/SwapProject/avatars/avatar-default.jpg" class="figure-img img-fluid rounded" style="width: 30%;" alt="A generic square placeholder image with rounded corners in a figure.">
+          </figure>
+          <p class="card-title" style="font-weight: bold; font-size: 18px;"> Posted by @{{ listing.user }}</p>
+          <p class="card-text"><small class="text-muted">Posted at {{listing.posted_at}}</small></p>
+          <a class="btn btn-outline-primary" style="width: 70%;" href="../profile/{{ listing.user.id }}">View Profile</a> <br><br>
+          {% if listing.user == request.user %}
+          <a class="btn btn-outline-primary" style="width: 70%;" href="{% url 'edit_listing' listing.id %}">Edit Listing</a><br><br>
+          <a class="btn btn-danger" style="width: 70%" href="/delete_listing/{{listing.pk}}">Delete</a>
+          {% else %}
+            {% if listing.is_available == True %}
+              <a class="btn btn-outline-primary" style="width: 100%;" href="../chat/{{listing.id}}{{user}}">Chat</a>
+            {% else %}
+            <button class="btn btn-secondary" style="width: 100%;" href="../chat/{{listing.id}}{{user}}" disabled>Chat</button>
+            {% endif %}
+          {% endif %}
+          </div>
+      </div>
+  </div>
+  <button onclick="history.back()" class="btn btn-secondary">Back</button>
+</div>
+{% endblock %}

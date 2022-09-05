@@ -1,0 +1,82 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+    .container {
+      margin-top: 3rem;
+    }
+  
+    textarea {
+      padding: 10px;
+      width: 100%;
+    }
+  </style>
+  
+  <div class="container">
+    <h3>Update your Listing! - {{listing}}</h3>
+    
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label>Image</label>
+      <div class="form-group">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="image" id="image">
+          <label class="custom-file-label" for="image">{{listing.image.url}}</label>
+        </div>
+      </div>
+      <label>Listing Name</label>
+      <div class="form-group">
+        <input class="form-control" name="title" type="text" style="padding: 10px; width: 100%;" value="{{listing.title}}">
+      </div>
+      <label>Description</label>
+      <div class="form-group">
+        <textarea class="form-control" name="description" rows="4" cols="50">{{listing.description}}</textarea>
+      </div>
+      <label>Category</label>
+      <div class="form-group">
+        <input class="form-control" name="category" style="padding: 10px; width: 100%;" type="text" value="{{listing.category}}"/>
+      </div>
+      <label>Size</label>
+      <div class="form-group">
+        <input class="form-control" name="size" style="padding: 10px; width: 100%;" type="text" value="{{listing.size}}"/>
+      </div>
+      <label>Condition</label>
+      <div class="form-group">
+        <input class="form-control" name="condition" style="padding: 10px; width: 100%;" type="text" value="{{listing.condition}}"/>
+      </div>
+      <label>Status of Item</label>
+      <div class="form-group">
+        <select name="is_available" class="form-control">
+          <option value={{listing.is_available}} selected>
+            {% if listing.is_available == True %}
+              Available
+            {% else %}
+             Unavailable
+            {% endif %}
+          </option>
+          {% if listing.is_available == True %}
+          <option value=False>Unvailable</option>
+          {% else %}
+          <option value=True>Available</option>
+          {% endif %}
+        </select>
+        <!-- <input class="form-control" name="is_available" style="padding: 10px; width: 100%;" type="text" value="{{listing.is_available}}"/> -->
+      </div>
+      <input type="submit" class="btn btn-success" value="Update"/>
+      <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
+  
+      <script type="application/javascript">
+        $('input[type="file"]').change(function(e){
+          var fileName = e.target.files[0].name;
+          $('.custom-file-label').html(fileName);
+        });
+      </script>
+      
+    </form>
+  </div>
+
+{% endif %}
+{% endblock %}

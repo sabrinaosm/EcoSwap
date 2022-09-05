@@ -1,0 +1,80 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+<style>
+  .container {
+    margin-top: 3rem;
+  }
+
+  textarea {
+    padding: 10px;
+    width: 100%;
+  }
+</style>
+
+<div class="container">
+  <h3>Create a Listing</h3>
+  <p>Begin your exchange journey here! Fill in the details for your new listing.</p>
+  <div class="card" style="padding: 20px;">
+    <form action="" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-group">
+        <label>Photo of Listing</label>
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="image" id="image">
+          <label class="custom-file-label" for="image">Choose an image!</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input class="form-control" name="title" type="text" style="padding: 10px; width: 100%;" placeholder="Enter Name of Listing"/>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea class="form-control" name="description" rows="4" cols="50" placeholder="Enter Description"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select class="form-control" name="category" style="padding: 10px; width: 100%;">
+          <option selected>Tops</option>
+          <option>Bottoms</option>
+          <option>Dresses</option>
+          <option>Outerwear</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Size</label>
+        <select class="form-control" name="size" style="padding: 10px; width: 100%;">
+          <option selected>Extra Small</option>
+          <option>Small</option>
+          <option>Medium</option>
+          <option>Large</option>
+          <option>Extra-Large</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Condition</label>
+        <select class="form-control" name="condition" style="padding: 10px; width: 100%;">
+          <option selected>Brand New</option>
+          <option>Lightly Used</option>
+          <option>Heavily Used</option>
+        </select>
+      </div>
+      <input type="submit" class="btn btn-success" value="Upload"/>
+      <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
+
+      <script type="application/javascript">
+        $('input[type="file"]').change(function(e){
+          var fileName = e.target.files[0].name;
+          $('.custom-file-label').html(fileName);
+        });
+      </script>
+      
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

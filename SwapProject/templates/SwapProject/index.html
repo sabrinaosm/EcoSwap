@@ -1,0 +1,49 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block content %}
+<div class="jumbotron text-white" style="background-color: #A4BEA5; text-align: center; margin-top: 100px;">
+    
+    {% if user.is_authenticated%}
+    <h1 class="display-4">Welcome back, @{{user}}!</h1>
+    {% else %}
+    <h1 class="display-4">Hello, world!</h1>
+    {% endif %}
+
+    <p class="lead">Join our community, swap and donate!</p>
+    <hr class="my-4">
+    <p>Begin your search here!</p>
+
+    {% block searchform %}
+
+        <form class="form-inline" method="GET" action="{% url 'search_listing' %}">
+            <input type="text" class="form-control" name='listing' placeholder="Search" aria-label="Listing" style="width: 200rem;"/>
+        </form>
+
+    {% endblock searchform %}
+
+</div>
+<div class="container">
+    <h4>Recent Listings</h4>
+    {% if listings_found == True %}
+    <div class="row">
+        {% for listing in avail_listings %}
+            <div class="col-6 col-md-4">
+                <a href="../listing/{{listing.id}}" style="color: black;">
+                    <div class="card" style="width: 17rem; height: 27rem; margin-bottom: 10px; ">
+                        <img src="{{listing.image.url}}" class="card-img-top"/>
+                        <div class="card-body" style="padding:20px;">
+                            <h5 class="card-title">{{ listing.title }}</h5>
+                            <p class="card-text">Posted by: @{{ listing.user }}</p>
+                            <p class="card-text"><small class="text-muted">Posted at: {{ listing.posted_at }}</small></p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %} 
+        </div>
+    </div>
+    {% else %}
+        <p>No listings posted or available at the moment..</p>
+    {% endif %} 
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="container">
+    <div class="container" style="width: 170rem; padding: 15px;">
+        <div class="row">
+          <div class="col align-self-start">
+            <h2 class="display-4">{{ category }}</h2>
+            <p>{{ category.category_description }}</p>
+          </div>
+        </div>
+        <button onclick="history.back()" class="btn btn-secondary">Back</button>
+        <a type="button" class="btn btn-info" href="../create_post">Create a Topic</a><br><br>
+    </div>
+    
+
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Topic</th>
+            <th scope="col">Started by</th>
+            <th scope="col">Replies</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% if post_exists == False %}
+                <div class="card-body">
+                    No posts at the moment.. Begin a discussion now!
+                </div>
+            {% else %}
+                {% for post in posts %}       
+                    <tr>        
+                        <td>
+                          <a href="../post/{{post.id}}">
+                            {{ post.post_title }}
+                          </a>
+                        </td>
+                        <td>@{{ post.user }}</td>
+                        <td>50 Replies</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+      </table>
+
+
+</div>
+
+{% endblock %}

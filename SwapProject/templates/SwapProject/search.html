@@ -1,0 +1,42 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-text text-center">
+            You have searched for: <b>{{ query }}</b>!
+        </h5>
+    </div>
+</div>
+
+<div class="card border-0">
+    {% if not listings %}
+    <div class="card">
+        <div class="card-body">
+            No listings found, sorry!
+        </div>
+    </div>
+</div>
+{% else %}
+
+<div class="container" style="margin-top: 10px;">
+    <div class="row">
+        {% for listing in listings %}
+        <div class="col-6 col-md-4">
+            <a href="../listing/{{ listing.id }}" style="color: black;">
+                <div class="card" style="margin-bottom: 10px;">
+                    <img src="../{{ listing.image.url }}" class="card-img-top"/>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ listing.title }}</h5>
+                        <p class="card-text">Posted by @{{ listing.user }}</p>
+                        <p class="card-text"><small class="text-muted">{{ listing.posted_at }}</small></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

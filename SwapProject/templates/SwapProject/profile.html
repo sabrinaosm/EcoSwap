@@ -1,0 +1,152 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+{% if user.is_authenticated %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}    
+{% endif %}
+
+<style>
+    a {
+        margin-bottom: 10px;
+        display: inline-block;
+    }
+</style>
+
+<div class="card border-0" style="margin: auto; margin-top: 15px; padding: 20px;">
+    <div class="row">
+        <!-- View your profile details and more here: -->
+        <div class="col-sm-4">
+            <div class="card" style="height: 100%;">
+                <div class="card-header">
+                    Profile
+                </div>
+                <div class="card-body text-center">
+                    <figure class="figure">
+                        <img src="../static/SwapProject/avatars/avatar-default.jpg" class="figure-img img-fluid rounded-circle" style="width: 30%;" alt="A generic square placeholder image with rounded corners in a figure.">
+                    </figure>
+                    <h5 class="card-title">@{{ user.username }}</h5>
+                    <p class="card-text">Hi, I'm {{ user.first_name }}!</p>
+
+                    <!-- Check if this the current user's profile -->
+                    {% if user == request.user %}
+                        <a href="../upload" class="btn btn-primary">Create a New Listing</a>
+                        <a href="../update/{{user.id}}" class="btn btn-primary">Edit Profile</a>
+
+                    {% else %}
+                        <!-- Check if this user is a friend -->
+                        {% if is_friend == False %}
+                             <!-- If it's not a friend, check if they've sent a friend request -->
+                            {% if friend_req_sent == True %}
+                            <!-- Display friend request sent button -->
+                                <button type="button" class="btn btn-info" disabled>Friend Request Sent</button>
+                            {% else %}
+                            <!-- Display add friend button -->
+                                <a href="../add_friend/{{user.pk}}" class="btn btn-outline-success">Add Friend</a>
+                            {% endif %}
+                        {% else %}
+                            <!-- Display friends button -->
+                            <button type="button" class="btn btn-primary" disabled>Friends</button>
+                        {% endif %}
+                    {% endif %}
+                    
+                    {% if user == request.user %}
+                    <!-- Check friends and friend requests -->
+                    <div class="container" style="margin-top: 10px;">
+                        <a class="btn btn-primary" data-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1">Friends</a>
+                        <a class="btn btn-primary" data-toggle="collapse" data-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Friend Requests</a>
+                     </div> 
+                    <div class="row">
+                        <div class="col">
+                          <div class="collapse multi-collapse" id="multiCollapseExample1">
+                            <div class="card card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% if not friends %}
+                                    <li class="list-group-item">No friends yet!</li>
+                                    {% else %}
+                                    {% for friend in friends %}
+                                    <li class="list-group-item"><a href="../profile/{{ friend.user.id }}">@{{ friend.user }}</a></li>
+                                    {% endfor %}
+                                    {% endif %}
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="col">
+                          <div class="collapse multi-collapse" id="multiCollapseExample2">
+                            <div class="card card-body">
+                                <ul class="list-group list-group-flush">
+                                    {% if friend_requesters %}
+                                    {% for friend_request in friend_requesters %}
+                                    <li class="list-group-item">
+                                        <a href="../profile/{{ friend_request.user_id }}">@{{friend_request}}</a> <br>
+                                        <a href="../decline_friend/{{friend_request.id}}" class="btn btn-outline-danger">Decline</a>
+                                        <a href="../accept_friend/{{friend_request.id}}" class="btn btn-outline-success">Accept</a>
+                                    </li>
+                                    {% endfor %}
+                                    {% else %}
+                                    <li class="list-group-item">No friend requests..</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- End check followers and following -->
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- End of viewing profile details. -->
+
+        <!-- View your listings: -->
+        <div class="col-sm-8">
+            <div class="card">
+                <div class="card-header">
+                    {{user}}'s Listings
+                </div>
+                <div class="row" style="padding: 10px;">
+                    {% if user_posted == False %}
+                        <div class="card-body">
+                            No listings posted..
+                        </div>
+                    {% else %}
+                        {% for listing in listings %}
+                            {% if listing.user == user %}
+                            <div class="col-6 col-md-4">
+                                <a href="../listing/{{listing.id}}" style="color: black; text-decoration: none;">
+                                    <div class="card" style="width: 17rem; height: 27rem;">
+                                        <img src="../{{listing.image.url}}" class="card-img-top"/>
+                                        <div class="card-body" style="padding:20px;">
+                                            <h5 class="card-title">{{ listing.title }}</h5>
+                                            <small class="text-muted">Posted on</small>
+                                            <p class="text-muted">{{ listing.posted_at }}</p>
+                                        </div>
+                                        {% if listing.is_available == False %}
+                                        <div class="card-footer bg-danger text-white">Not Available</div>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <!-- End of listings. -->
+    </div>
+</div>
+{% endif %}
+{% endblock %}

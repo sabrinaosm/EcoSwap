@@ -1,0 +1,58 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+
+<div class="container">
+    <div class="container">
+        <button onclick="history.back()" class="btn btn-secondary" style="margin-top: 10px; margin-bottom: 10px">Back</button>
+        <div class="card-group">
+            <div class="card" style="padding: 15px;">
+                <div class="card-body text-center">
+                    Created by @{{post.user}}
+                </div>
+                <div class="card-text">
+                    <small class="text-muted">
+                        Posted on: {{ post.posted_at }}
+                    </small>
+                </div>
+            </div>
+            <div class="card" style="padding: 15px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post }}</h5>
+                    <p class="card-text">{{ post.post_content }}</p>
+                  </div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top:15px; padding: 15px;">
+            <p>What are your thoughts?</p>
+            <form method="POST">
+                {% csrf_token %}
+                <textarea name="comment" placeholder="Reply to this post!" style="padding: 15px; border-radius: 5px; width: 100%;"></textarea>
+                <input type="submit" value="Comment" class="btn btn-primary" style="width: 20%; margin-top: 10px;"/>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Replies</h5>
+                {% if not comments %}
+                <div class="card-body">
+                    <p class="card-text">No comments at the moment.</p>
+                </div>
+                {% endif %}
+                {% for comment in comments %}
+                <div class="card" style="padding:30px;">
+                    <p class="card-text">@{{ comment.user }}:</p>
+                    <p class="card-text">{{ comment.comment }}</p>
+                    <small class="text-muted">Posted at: {{ comment.posted_at }}</small>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

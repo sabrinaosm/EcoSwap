@@ -1,0 +1,52 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<style>
+  .container {
+    padding: 20px;
+    margin-bottom: 30px;
+    width: 170rem;
+  }
+</style>
+
+<div class="container">
+
+  <div class="container" style="width: 170rem;">
+    <div class="row">
+      <div class="col align-self-start">
+        <h2 class="display-2">Forum</h2>
+        <p>Feel free to share your thoughts in our forum today!</p>
+      </div>
+    </div>
+  </div>
+
+    {% for category in categories %}
+    <div class="container border">
+      <div class="row">
+        <div class="col-sm">
+          <figure>
+            <img src="../static/SwapProject/avatars/general.jpg" style="width: 14rem; margin-top: 1rem;">
+          </figure>
+        </div>
+        <div class="col-sm">
+          <a href="../category/{{ category.id }}">
+            <h6 class="text-center" id="category-title"><b>{{ category.category_title }}</b></h6>
+          </a>
+          <p style="text-align: justify; text-justify: inter-word;">{{ category.category_description }}</p>
+        </div>
+        <div class="col-sm">
+          <h6 class="text-center"><b>Topics</b></h6>
+          <p class="text-center">1</p>
+        </div>
+        <div class="col-sm">
+          <h6 class="text-center"><b>Last Posted By</b></h6>
+          <p class="text-center">@{{user}}</p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

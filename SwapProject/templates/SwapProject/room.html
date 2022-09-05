@@ -1,0 +1,84 @@
+{% extends "./base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="form-group">
+    <div class="card" class="border" style="margin:auto; width: 50%; margin-top: 15px; padding:20px;;">
+        <div id="chat-log" class="overflow-auto">
+            {% for chat in chats.all %}
+                {% if chat.user.id == request.user.id %}
+                    <div class="card-body text-white bg-info text-left border-light">
+                        <div class="message sender">
+                            <small>@{{ chat.user }}:</small><br>
+                            {{ chat.content }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="card-body text-white bg-secondary text-right border-danger">
+                        <div class="message receiver">
+                            <small>@{{ chat.user }}:</small><br>
+                            {{ chat.content }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <input class="form-control" id="chat-message-input" type="text" size="100" placeholder="Enter your message here.."><br>
+        <input class="form-control btn-primary" id="chat-message-submit" type="button" onClick="window.location.reload();" value="Send">
+        <br>
+        <a type="button" class="btn btn-secondary" href="/">Leave Chat</a>
+    </div>
+
+</div>
+
+{{ request.user.id|json_script:"user_id" }}
+{{ room_name|json_script:"room-name" }}
+
+<script>
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+    const chatSocket = new WebSocket('ws://'+ window.location.host+ '/ws/'+roomName+ '/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const messageElement = document.createElement('div')
+        const userId = data['user-id']
+        const loggedInUserId = JSON.parse(document.getElementById('user_id').textContent)
+        messageElement.innerText = data.message
+        document.querySelector('#chat-log').value += (data.message + '\n');
+
+        if (userId === loggedInUserId) {
+            messageElement.classList.add('message', 'sender')
+        } else {
+            messageElement.classList.add('message', 'receiver')
+        }
+
+        chatLog.appendChild(messageElement)
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+            
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+
+
+{% endblock %}
